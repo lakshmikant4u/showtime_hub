@@ -1,0 +1,6 @@
+CREATE TABLE movie (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255),
+    genre VARCHAR(255),
+    city VARCHAR(255)
+);
