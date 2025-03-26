@@ -2,6 +2,7 @@ package com.showtimehub.booking.model;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.Data;
@@ -20,5 +21,6 @@ public class Booking {
     private double totalPrice;
     private double discount;
 
-    // Getters and Setters
+    @Version
+    private Long version;
 }

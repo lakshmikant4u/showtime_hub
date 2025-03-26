@@ -1,9 +1,16 @@
 package com.showtimehub.booking.controller;
 
+import com.showtimehub.booking.exception.SeatAlreadyBookedException;
+import com.showtimehub.booking.model.Booking;
+import com.showtimehub.booking.service.BookingService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+
 import com.showtimehub.booking.model.*;
 import com.showtimehub.booking.service.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -58,8 +65,13 @@ public class BookingController {
     }
 
     @PostMapping("/book")
-    public Booking bookTicket(@RequestBody Booking booking) {
-        return bookingService.bookTicket(booking);
+    public ResponseEntity<?> bookTicket(@RequestBody Booking booking) {
+        try {
+            Booking savedBooking = bookingService.bookTicket(booking);
+            return new ResponseEntity<>(savedBooking, HttpStatus.CREATED);
+        } catch (SeatAlreadyBookedException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        }
     }
 
     @GetMapping("/offers")
