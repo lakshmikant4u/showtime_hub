@@ -11,6 +11,8 @@ import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Service
 public class BookingServiceImpl implements BookingService {
@@ -21,9 +23,12 @@ public class BookingServiceImpl implements BookingService {
     @Autowired
     private SeatRepository seatRepository;
 
+    private final Lock lock = new ReentrantLock();
+
     @Override
     public Booking bookTicket(Booking booking) {
         while (true) {
+            lock.lock();
             try {
                 // Check if the seats are available
                 List<Seat> seats = seatRepository.findAllById(booking.getSeats());
@@ -44,6 +49,8 @@ public class BookingServiceImpl implements BookingService {
             } catch (OptimisticLockingFailureException e) {
                 // Retry booking in case of optimistic locking failure
                 System.out.println("Optimistic locking failure, retrying booking...");
+            } finally {
+                lock.unlock();
             }
         }
     }
