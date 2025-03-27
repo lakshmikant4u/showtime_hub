@@ -71,6 +71,8 @@ public class BookingController {
             return new ResponseEntity<>(savedBooking, HttpStatus.CREATED);
         } catch (SeatAlreadyBookedException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to book ticket", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
